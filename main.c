@@ -6,9 +6,17 @@
 #define ID_UNIT_PRICE 101
 #define ID_BASIS_VALUE 102
 
+HWND hwndUnitPrice;
+HWND hwndBasisValue;
+HWND hwndMultiplier;
+HWND hwndDiscount;
+HWND hwndMarkup;
+HWND hwndGrossProfit;
+
 LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 void CreateLabel(HWND hwnd, LPCWSTR caption, int x, int y, int width, int height);
 HWND CreateTextEdit(HWND hwnd, HMENU hMenu, int x, int y, int width, int height);
+HWND CreateTextDisplay(HWND hwnd, int x, int y, int width, int height);
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
@@ -63,13 +71,21 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     switch(uMsg)
     {
         case WM_CREATE:
-            CreateLabel(hwnd, L"Unit Price", 10, 10, 75, 20);
-            CreateTextEdit(hwnd, (HMENU)ID_UNIT_PRICE, 85, 10, 75, 20);
+            CreateLabel(hwnd, L"Unit Price", 10, 10, 80, 20);
+            CreateLabel(hwnd, L"Basis Value", 10, 30, 80, 20);
+            CreateLabel(hwnd, L"Multiplier", 185, 10, 80, 20);
+            CreateLabel(hwnd, L"Discount", 185, 30, 80, 20);
+            CreateLabel(hwnd, L"Markup", 185, 50, 80, 20);
+            CreateLabel(hwnd, L"Gross Profit", 185, 70, 80, 20);
 
-            CreateLabel(hwnd, L"Basis Value", 10, 30, 75, 20);
-            CreateTextEdit(hwnd, (HMENU)ID_BASIS_VALUE, 85, 30, 75, 20);
+            hwndUnitPrice = CreateTextEdit(hwnd, (HMENU)ID_UNIT_PRICE, 90, 10, 75, 20);
+            hwndBasisValue = CreateTextEdit(hwnd, (HMENU)ID_BASIS_VALUE, 90, 30, 75, 20);
 
-            CreateLabel(hwnd, L"Multiplier", 170, 10, 75, 20);
+            hwndMultiplier = CreateTextDisplay(hwnd, 270, 10, 75, 20);
+            hwndDiscount = CreateTextDisplay(hwnd, 270, 30, 75, 20);
+            hwndMarkup = CreateTextDisplay(hwnd, 270, 50, 75, 20);
+            hwndGrossProfit = CreateTextDisplay(hwnd, 270, 70, 75, 20);
+
             break;
         case WM_DESTROY:
             PostQuitMessage(0);
@@ -99,4 +115,9 @@ void CreateLabel(HWND hwnd, LPCWSTR caption, int x, int y, int width, int height
 HWND CreateTextEdit(HWND hwnd, HMENU hMenu, int x, int y, int width, int height)
 {
     return CreateWindowExW(WS_EX_CLIENTEDGE, L"EDIT", L"", WS_CHILD | WS_VISIBLE, x, y, width, height, hwnd, hMenu, NULL, NULL);
+}
+
+HWND CreateTextDisplay(HWND hwnd, int x, int y, int width, int height)
+{
+    CreateWindowExW(WS_EX_CLIENTEDGE, L"STATIC", L"", WS_CHILD | WS_VISIBLE, x, y, width, height, hwnd, (HMENU)NULL, NULL, NULL);
 }
