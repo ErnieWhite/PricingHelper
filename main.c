@@ -3,8 +3,11 @@
 #endif
 #include <windows.h>
 
+#define ID_UNIT_PRICE 101
+
 LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 void CreateLabel(HWND hwnd, LPCWSTR caption, int x, int y, int width, int height);
+HWND CreateTextEdit(HWND hwnd, HMENU hMenu, int x, int y, int width, int height);
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
@@ -17,6 +20,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
     wc.lpfnWndProc = WndProc;
     wc.hInstance = hInstance;
     wc.lpszClassName = CLASS_NAME;
+    wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+    wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
 
     RegisterClassW(&wc);
 
@@ -58,6 +63,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     {
         case WM_CREATE:
             CreateLabel(hwnd, L"Unit Price", 10, 10, 75, 20);
+            CreateTextEdit(hwnd, (HMENU)ID_UNIT_PRICE, 85, 10, 75, 20);
             break;
         case WM_DESTROY:
             PostQuitMessage(0);
@@ -68,7 +74,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                 HDC hdc = BeginPaint(hwnd, &ps);
 
                 // All painting occurs here, between BeginPaint and EndPaint
-                FillRect(hdc, &ps.rcPaint, (HBRUSH)(COLOR_WINDOW + 1));
+                FillRect(hdc, &ps.rcPaint, (HBRUSH)(COLOR_WINDOW));
 
                 EndPaint(hwnd, &ps);
             }
@@ -82,4 +88,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 void CreateLabel(HWND hwnd, LPCWSTR caption, int x, int y, int width, int height)
 {
     CreateWindowExW(0, L"STATIC", caption, WS_CHILD | WS_VISIBLE, x, y, width, height, hwnd, (HMENU)NULL, NULL, NULL);
+}
+
+HWND CreateTextEdit(HWND hwnd, HMENU hMenu, int x, int y, int width, int height)
+{
+    return CreateWindowExW(WS_EX_CLIENTEDGE, L"EDIT", L"", WS_CHILD | WS_VISIBLE, x, y, width, height, hwnd, hMenu, NULL, NULL);
 }
