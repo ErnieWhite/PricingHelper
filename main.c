@@ -17,6 +17,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 void CreateLabel(HWND hwnd, LPCWSTR caption, int x, int y, int width, int height);
 HWND CreateTextEdit(HWND hwnd, HMENU hMenu, int x, int y, int width, int height);
 HWND CreateTextDisplay(HWND hwnd, int x, int y, int width, int height);
+void CreateVerticalSeparator(HWND hwnd, int x, int top, int bottom);
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
@@ -81,6 +82,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             hwndUnitPrice = CreateTextEdit(hwnd, (HMENU)ID_UNIT_PRICE, 90, 10, 75, 20);
             hwndBasisValue = CreateTextEdit(hwnd, (HMENU)ID_BASIS_VALUE, 90, 30, 75, 20);
 
+            CreateVerticalSeparator(hwnd, 175, 10, 80);
+
             hwndMultiplier = CreateTextDisplay(hwnd, 270, 10, 75, 20);
             hwndDiscount = CreateTextDisplay(hwnd, 270, 30, 75, 20);
             hwndMarkup = CreateTextDisplay(hwnd, 270, 50, 75, 20);
@@ -120,4 +123,9 @@ HWND CreateTextEdit(HWND hwnd, HMENU hMenu, int x, int y, int width, int height)
 HWND CreateTextDisplay(HWND hwnd, int x, int y, int width, int height)
 {
     CreateWindowExW(WS_EX_CLIENTEDGE, L"STATIC", L"", WS_CHILD | WS_VISIBLE, x, y, width, height, hwnd, (HMENU)NULL, NULL, NULL);
+}
+
+void CreateVerticalSeparator(HWND hwnd, int x, int top, int bottom)
+{
+    CreateWindowExW(0, L"STATIC", NULL, WS_VISIBLE | WS_CHILD | SS_ETCHEDVERT, x, top, 2, bottom, hwnd, NULL, NULL, NULL);
 }
