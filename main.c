@@ -4,6 +4,7 @@
 #include <windows.h>
 
 #define ID_UNIT_PRICE 101
+#define ID_BASIS_VALUE 102
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 void CreateLabel(HWND hwnd, LPCWSTR caption, int x, int y, int width, int height);
@@ -64,6 +65,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         case WM_CREATE:
             CreateLabel(hwnd, L"Unit Price", 10, 10, 75, 20);
             CreateTextEdit(hwnd, (HMENU)ID_UNIT_PRICE, 85, 10, 75, 20);
+
+            CreateLabel(hwnd, L"Basis Value", 10, 30, 75, 20);
+            CreateTextEdit(hwnd, (HMENU)ID_BASIS_VALUE, 85, 30, 75, 20);
+
+            CreateLabel(hwnd, L"Multiplier", 170, 10, 75, 20);
             break;
         case WM_DESTROY:
             PostQuitMessage(0);
