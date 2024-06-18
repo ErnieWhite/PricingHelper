@@ -4,6 +4,7 @@
 #include <windows.h>
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+void CreateLabel(HWND hwnd, LPCWSTR caption, int x, int y, int width, int height);
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
@@ -39,7 +40,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
     }
 
     ShowWindow(hwnd, nCmdShow);
-    UpdateWindow(hwnd);
 
     // Run the message loop
     MSG msg = { };
@@ -56,9 +56,12 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch(uMsg)
     {
+        case WM_CREATE:
+            CreateLabel(hwnd, L"Unit Price", 10, 10, 75, 20);
+            break;
         case WM_DESTROY:
             PostQuitMessage(0);
-            return 0;
+            break;
         case WM_PAINT:
             {
                 PAINTSTRUCT ps;
@@ -69,9 +72,14 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
                 EndPaint(hwnd, &ps);
             }
-            return 0;
+            break;
     }
     
     // all unhandled msgs are handled by DefWindowProc
     return DefWindowProc(hwnd, uMsg, wParam, lParam);
+}
+
+void CreateLabel(HWND hwnd, LPCWSTR caption, int x, int y, int width, int height)
+{
+    CreateWindowExW(0, L"STATIC", caption, WS_CHILD | WS_VISIBLE, x, y, width, height, hwnd, (HMENU)NULL, NULL, NULL);
 }
