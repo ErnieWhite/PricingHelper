@@ -14,12 +14,8 @@ A small WIN32 program in c that has several tools to help with pricing formulas 
 
 ### Find Basis Value View
 - Inputs
-    - Unit Price: Floating point number
+    - Unit Price
     - Formula
-        - Multiplier: *0.67
-        - Discount: -33
-        - Markup: D0.75
-        - Gross Profit: GP25
 - Outputs
     - Basis Value
 - Buttons
