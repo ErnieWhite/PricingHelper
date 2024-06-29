@@ -1,7 +1,13 @@
 #ifndef UNICODE
 #define UNICODE
 #endif
+
+#ifndef _UNICODE
+#define _UNICODE
+#endif
+
 #include <windows.h>
+#include <string.h>
 
 #define ID_UNIT_PRICE 101
 #define ID_BASIS_VALUE 102
@@ -13,7 +19,7 @@ HWND hwndDiscount;
 HWND hwndMarkup;
 HWND hwndGrossProfit;
 
-LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+LRESULT CALLBACK MainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 void CreateLabel(HWND hwnd, LPCWSTR caption, int x, int y, int width, int height);
 HWND CreateTextEdit(HWND hwnd, HMENU hMenu, int x, int y, int width, int height);
 HWND CreateTextDisplay(HWND hwnd, int x, int y, int width, int height);
@@ -27,7 +33,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 
     WNDCLASSW wc = { };
     
-    wc.lpfnWndProc = WndProc;
+    wc.lpfnWndProc = MainWndProc;
     wc.hInstance = hInstance;
     wc.lpszClassName = CLASS_NAME;
     wc.hCursor = LoadCursor(NULL, IDC_ARROW);
@@ -64,10 +70,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
         DispatchMessage(&msg);
     }
 
-    return 0;
+    return (int)msg.wParam;
 }
 
-LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK MainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch(uMsg)
     {
