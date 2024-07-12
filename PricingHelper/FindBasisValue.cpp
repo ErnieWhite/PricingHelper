@@ -94,6 +94,7 @@ namespace FindBasisValue {
             hUnitPrice = CreateWindowExW(WS_EX_CLIENTEDGE, L"EDIT", L"", WS_CHILD | WS_VISIBLE, 100, 10, 80, 20, hWnd, (HMENU)IDC_UNIPRICE, hInst, nullptr);
             hFormula = CreateWindowExW(WS_EX_CLIENTEDGE, L"EDIT", L"", WS_CHILD | WS_VISIBLE, 100, 50, 80, 20, hWnd, (HMENU)IDC_FORMULA, hInst, nullptr);
             hDecimals = CreateWindowExW(0, L"COMBOBOX", L"", CBS_DROPDOWN | CBS_HASSTRINGS | WS_CHILD | WS_OVERLAPPED | WS_VISIBLE, 100, 90, 80, 200, hWnd, (HMENU)IDC_DECIMALS, hInst, nullptr);
+
             // Add items to the combo box
             SendMessageW(hDecimals, CB_ADDSTRING, 0, (LPARAM)L"0");
             SendMessageW(hDecimals, CB_ADDSTRING, 0, (LPARAM)L"1");
