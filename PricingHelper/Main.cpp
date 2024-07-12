@@ -7,16 +7,16 @@
 #endif
 
 #include <windows.h>
-#include "../header/FindFormulas.h"
-#include "../header/FindBasisValue.h"
-#include "../header/ConvertFormula.h"
+#include "FindFormulas.h"
+#include "FindBasisValue.h"
+#include "ConvertFormula.h"
 
 
 // Menu IDs
-#define IDM_FINDFORMULAS 101
-#define IDM_FINDBASISVALUE 102
-#define IDM_CONVERTFORMULA 103
-#define IDM_EXIT 199
+const UINT16 IDM_FINDFORMULAS = 101;
+const UINT16 IDM_FINDBASISVALUE = 102;
+const UINT16 IDM_CONVERTFORMULA = 103;
+const UINT16 IDM_EXIT = 199;
 
 enum View { FINDFORMULAVIEW, FINDBASISVALUEVIEW, CONVERTFORMULAVIEW };
 View currentView = FINDFORMULAVIEW;

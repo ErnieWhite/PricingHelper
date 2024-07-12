@@ -15,19 +15,19 @@ namespace FindBasisValue {
     const wchar_t szWndClass[] = L"FindBasisValueClass";
     const wchar_t szTitle[] = L"Find Basis Value";
 
+    // function prototypes
     LRESULT CALLBACK ChildWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
     void UpdateBasisValue();
     // void SetDecimalPlaces(std::wstringstream& stream, int decimalPlaces);
     void ClearBasisValue();
     // bool ValidateDoubleText(HWND hWnd);
     // bool ValidateFormulaText(HWND hWnd);
 
-    const std::uint16_t IDC_UNIPRICE = 101;
-    const std::uint16_t IDC_FORMULA = 102;
-    const std::uint16_t IDC_DECIMALS = 103;
-    const std::uint16_t IDC_BASISVALUE = 104;
-    const std::uint16_t IDC_BASISVALUE_COPY = 105;
+    const UINT16 IDC_UNIPRICE = 101;
+    const UINT16 IDC_FORMULA = 102;
+    const UINT16 IDC_DECIMALS = 103;
+    const UINT16 IDC_BASISVALUE = 104;
+    const UINT16 IDC_BASISVALUE_COPY = 105;
 
     HINSTANCE hInst;
     HWND hWnd;
@@ -148,6 +148,7 @@ namespace FindBasisValue {
         // Get the text from the controls
         wchar_t unitPriceText[101];
         wchar_t formulaText[101];
+
         GetWindowTextW(hUnitPrice, unitPriceText, 100);
         GetWindowTextW(hFormula, formulaText, 100);
 
