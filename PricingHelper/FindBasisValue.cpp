@@ -1,4 +1,5 @@
 #include <windows.h>
+#include <iostream>
 #include <string>
 #include <sstream>
 #include <iomanip>
@@ -20,14 +21,14 @@ namespace FindBasisValue {
     void UpdateBasisValue();
     // void SetDecimalPlaces(std::wstringstream& stream, int decimalPlaces);
     void ClearBasisValue();
-    // bool ValidateDoubleText(HWND hWnd);
-    // bool ValidateFormulaText(HWND hWnd);
+    bool ValidateDoubleText(HWND hWnd);
+    bool ValidateFormulaText(HWND hWnd);
 
-    const UINT16 IDC_UNIPRICE = 101;
-    const UINT16 IDC_FORMULA = 102;
-    const UINT16 IDC_DECIMALS = 103;
-    const UINT16 IDC_BASISVALUE = 104;
-    const UINT16 IDC_BASISVALUE_COPY = 105;
+    const UINT64 IDC_UNIPRICE = 101;
+    const UINT64 IDC_FORMULA = 102;
+    const UINT64 IDC_DECIMALS = 103;
+    const UINT64 IDC_BASISVALUE = 104;
+    const UINT64 IDC_BASISVALUE_COPY = 105;
 
     HINSTANCE hInst;
     HWND hWnd;
@@ -86,14 +87,14 @@ namespace FindBasisValue {
         case WM_CREATE:
             // TODO: extract this to a function
             // Create the labels for the inputs
-            CreateWindowW(L"STATIC", L"Unit Price", WS_CHILD | WS_VISIBLE, 10, 10, 80, 20, hWnd, nullptr, hInst, nullptr);
-            CreateWindowW(L"STATIC", L"Formula", WS_CHILD | WS_VISIBLE, 10, 50, 80, 20, hWnd, nullptr, hInst, nullptr);
-            CreateWindowW(L"STATIC", L"Decimals", WS_CHILD | WS_VISIBLE, 10, 90, 80, 20, hWnd, nullptr, hInst, nullptr);
+            CreateWindowW(L"STATIC", L"Unit Price", WS_CHILD | WS_VISIBLE, 10, 10, 80, 20, hWnd, NULL, hInst, NULL);
+            CreateWindowW(L"STATIC", L"Formula", WS_CHILD | WS_VISIBLE, 10, 50, 80, 20, hWnd, NULL, hInst, NULL);
+            CreateWindowW(L"STATIC", L"Decimals", WS_CHILD | WS_VISIBLE, 10, 90, 80, 20, hWnd, NULL, hInst, NULL);
 
             // Create the input controls
-            hUnitPrice = CreateWindowExW(WS_EX_CLIENTEDGE, L"EDIT", L"", WS_CHILD | WS_VISIBLE, 100, 10, 80, 20, hWnd, (HMENU)IDC_UNIPRICE, hInst, nullptr);
-            hFormula = CreateWindowExW(WS_EX_CLIENTEDGE, L"EDIT", L"", WS_CHILD | WS_VISIBLE, 100, 50, 80, 20, hWnd, (HMENU)IDC_FORMULA, hInst, nullptr);
-            hDecimals = CreateWindowExW(0, L"COMBOBOX", L"", CBS_DROPDOWN | CBS_HASSTRINGS | WS_CHILD | WS_OVERLAPPED | WS_VISIBLE, 100, 90, 80, 200, hWnd, (HMENU)IDC_DECIMALS, hInst, nullptr);
+            hUnitPrice = CreateWindowExW(WS_EX_CLIENTEDGE, L"EDIT", L"", WS_CHILD | WS_VISIBLE, 100, 10, 80, 20, hWnd, (HMENU)IDC_UNIPRICE, hInst, NULL);
+            hFormula = CreateWindowExW(WS_EX_CLIENTEDGE, L"EDIT", L"", WS_CHILD | WS_VISIBLE, 100, 50, 80, 20, hWnd, (HMENU)IDC_FORMULA, hInst, NULL);
+            hDecimals = CreateWindowExW(0, L"COMBOBOX", L"", CBS_DROPDOWN | CBS_HASSTRINGS | WS_CHILD | WS_OVERLAPPED | WS_VISIBLE, 100, 90, 80, 200, hWnd, (HMENU)IDC_DECIMALS, hInst, NULL);
 
             // Add items to the combo box
             SendMessageW(hDecimals, CB_ADDSTRING, 0, (LPARAM)L"0");
@@ -107,35 +108,39 @@ namespace FindBasisValue {
             SendMessageW(hDecimals, CB_SETCURSEL, 0, 0); // Default selection
 
             // Create a vertical separator
-            CreateWindowW(L"STATIC", L"", WS_CHILD | WS_VISIBLE | SS_ETCHEDVERT, 190, 10, 2, 110, hWnd, nullptr, hInst, nullptr);
+            CreateWindowW(L"STATIC", L"", WS_CHILD | WS_VISIBLE | SS_ETCHEDVERT, 190, 10, 2, 110, hWnd, NULL, hInst, NULL);
 
             // Create the labels for the formula displays
-            CreateWindowW(L"STATIC", L"Basis Value", WS_CHILD | WS_VISIBLE, 200, 10, 80, 20, hWnd, (HMENU)IDC_BASISVALUE, hInst, nullptr);
+            CreateWindowW(L"STATIC", L"Basis Value", WS_CHILD | WS_VISIBLE, 200, 10, 80, 20, hWnd, NULL, hInst, NULL);
 
             // Create the formula display controls
-            hBasisValue = CreateWindowExW(WS_EX_STATICEDGE, L"EDIT", L"", WS_CHILD | WS_VISIBLE | WS_DISABLED, 285, 10, 75, 20, hWnd, (HMENU)IDC_BASISVALUE_COPY, hInst, nullptr);
+            hBasisValue = CreateWindowExW(WS_EX_STATICEDGE, L"EDIT", L"", WS_CHILD | WS_VISIBLE | WS_DISABLED, 285, 10, 75, 20, hWnd, (HMENU)IDC_BASISVALUE, hInst, nullptr);
+            hBasisValueCopy = CreateWindowExW(0, L"BUTTON", L"Copy", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 360, 10, 75, 20, hWnd, (HMENU)IDC_BASISVALUE_COPY, hInst, NULL);
 
             // Set initial values
             UpdateBasisValue();
 
             break;
-            // case WM_KEYDOWN:
-            // case WM_CHAR: 
-            //     // if the keypress as the return, tab or backspace keys let them through
-            //     if (LOWORD(wParam) == VK_RETURN || LOWORD(wParam) == VK_TAB || LOWORD(wParam) == VK_BACK) {
-            //         return DefWindowProcW(hWnd, uMsg, wParam, lParam);
-            //     }
+        case WM_KEYDOWN:
+        case WM_CHAR: 
+            if (LOWORD(wParam) == IDC_UNIPRICE) {
+                MessageBeep(5);
+            }
+            // if the keypress as the return, tab or backspace keys let them through
+            if (LOWORD(wParam) == VK_RETURN || LOWORD(wParam) == VK_TAB || LOWORD(wParam) == VK_BACK) {
+                return DefWindowProc(hWnd, uMsg, wParam, lParam);
+            }
 
-            //     // if this is the unit price and the value validates let the key pass through
-            //     if (GetFocus() == hUnitPrice && ValidateDoubleText(hUnitPrice)) {
-            //         return DefWindowProcW(hWnd, uMsg, wParam, lParam);
-            //     }
+            // if this is the unit price and the value validates let the key pass through
+            if (GetFocus() == hUnitPrice && ValidateDoubleText(hUnitPrice)) {
+                return DefWindowProc(hWnd, uMsg, wParam, lParam);
+            }
 
-            //     // if this is the formula and the value validates let the key pass through
-            //     if (GetFocus() == hFormula && ValidateFormulaText(hFormula)) {
-            //         return DefWindowProcW(hWnd, uMsg, wParam, lParam);
-            //     }
-            //     break;
+            // if this is the formula and the value validates let the key pass through
+            if (GetFocus() == hFormula && ValidateFormulaText(hFormula)) {
+                return DefWindowProc(hWnd, uMsg, wParam, lParam);
+            }
+            break;
         default:
             return DefWindowProc(hWnd, uMsg, wParam, lParam);
         }
@@ -183,6 +188,10 @@ namespace FindBasisValue {
 
         double basisValue = unitPrice / multiplier;
 
+        if (basisValue == 0) {
+            ClearBasisValue();
+        }
+
         int decimalPlaces = (int)SendMessage(hDecimals, CB_GETCURSEL, 0, 0);
 
         std::wstringstream stream;
@@ -192,12 +201,10 @@ namespace FindBasisValue {
         else {
             stream << basisValue;
         }
+
         std::wstring wstr = stream.str();
-        wchar_t* wch = new wchar_t[wstr.length() + 1];
+        SetWindowTextW(hBasisValue, stream.str().c_str());
 
-        SetWindowTextW(hBasisValue, wch);
-
-        delete[] wch;
 
     }
 
@@ -214,25 +221,26 @@ namespace FindBasisValue {
         SetWindowTextW(hBasisValue, L"");
     }
 
-    // bool ValidateDoubleText(HWND hWnd) {
-    //     wchar_t buffer[100];
-    //     GetWindowTextW(hWnd, buffer, 100);
+     bool ValidateDoubleText(HWND hWnd) {
+         wchar_t buffer[100];
+         GetWindowTextW(hWnd, buffer, 100);
 
-    //     std::wstring text(buffer);
-    //     std::wregex float_regex(LR"(^[-+]?\d*\.?\d*$)");
+         std::wstring text(buffer);
+         std::wregex float_regex(LR"(^[-+]?\d*\.?\d*$)");
+         MessageBeep(5);
 
-    //     return !std::regex_match(text, float_regex);
-    // }
+         return !std::regex_match(text, float_regex);
+     }
 
-    // bool ValidateFormulaText(HWND hWnd) {
-    //     wchar_t buffer[100];
-    //     GetWindowTextW(hWnd, buffer, 100);
+     bool ValidateFormulaText(HWND hWnd) {
+         wchar_t buffer[100];
+         GetWindowTextW(hWnd, buffer, 100);
 
-    //     std::wstring text(buffer);
-    //     std::wregex pattern_regex(LR"(^(\*|D|\+|-|GP[-+]?\d*\.?\d*$)");
+         std::wstring text(buffer);
+         std::wregex pattern_regex(LR"(^(\*|D|\+|-|GP[-+]?\d*\.?\d*$)");
 
-    //     return !std::regex_match(text, pattern_regex);
-    // }
+         return !std::regex_match(text, pattern_regex);
+     }
 
     void Hide() {
         DestroyWindow(hWnd);
